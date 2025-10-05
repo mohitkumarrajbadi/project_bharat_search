@@ -41,7 +41,7 @@ User → Gateway → Orchestrator → Agents → LLM + Vector DB → Response
 
 | Layer          | Technology                                |
 | -------------- | ----------------------------------------- |
-| Frontend       | Next.js, Tailwind, PWA                    |
+| Frontend       | Next.js, React, CSS                       |
 | Gateway        | Go (Fiber/gRPC)                           |
 | Orchestrator   | Python (FastAPI, asyncio)                 |
 | Agents         | Python / Node / Go microservices          |
