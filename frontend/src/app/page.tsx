@@ -5,11 +5,12 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const aiFeatures = [
-    "Real-time News",
+    "Weather Updates",
     "Finance Insights",
     "Sports Updates",
-    "Entertainment",
-    "Travel Guides",
+    "Farmers Info",
+    "Health Tips",
+    "Education",
   ];
 
   const [menuOpen, setMenuOpen] = useState(false);
