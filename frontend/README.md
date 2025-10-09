@@ -34,3 +34,27 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+frontend/
+├── app/                   # Next.js pages & global layout
+│   ├── page.tsx
+│   ├── layout.tsx
+│   └── globals.css
+├── contexts/              # React Contexts (Auth, Theme)
+│   └── AuthContext.tsx
+├── features/              # Feature-based modules
+│   ├── search/            # Search feature
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── api.ts
+│   │   └── types.ts
+│   └── weather/           # Weather feature (example)
+├── services/              # Shared service APIs
+│   └── WebSocketService.ts
+├── state/                 # Redux Toolkit slices / store
+│   ├── slices/
+│   └── store.ts
+├── types/                 # Shared TypeScript types
+├── utils/                 # Helper functions (formatters, parsers)
+└── tests/                 # Unit / Integration tests

@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
+import SearchHeader from "@/features/search/components/SearchHeader";
+import SearchFooter from "@/features/search/components/SearchFooter";
 
 export default function Home() {
   const aiFeatures = [
@@ -38,66 +40,39 @@ export default function Home() {
     alert(`Feature clicked: ${feature}`);
   };
 
-  return (
-    <div className={styles.page}>
-      {/* Hamburger Navbar */}
-      <div className={styles.navbar}>
-        <button
-          className={styles.hamburger}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          ☰
-        </button>
-      </div>
-
-      {/* Side Drawer */}
-      <div
-        ref={drawerRef}
-        className={`${styles.sideDrawer} ${
-          menuOpen ? styles.sideDrawerOpen : ""
-        }`}
+return (
+  <div className={styles.page}>
+    {/* Hamburger Navbar */}
+    <div className={styles.navbar}>
+      <button
+        className={styles.hamburger}
+        onClick={() => setMenuOpen(!menuOpen)}
       >
-        <ul>
-          <li>Chats</li>
-          <li>AI Agents</li>
-          <li>Settings</li>
-          <li>About</li>
-        </ul>
-      </div>
-
-      <header className={styles.hero}>
-        <h1 className={styles.title}>Project Bharat Search</h1>
-        <p className={styles.subtitle}>
-          India-scale AI-powered search engine for fast, intelligent, multilingual search.
-        </p>
-
-        {/* Centered Search */}
-        <div className={styles.searchContainer}>
-          <input
-            type="text"
-            placeholder="Search BharatSearch..."
-            className={styles.searchInput}
-          />
-          <button className={styles.searchButton}>Search</button>
-        </div>
-
-        {/* AI Feature Buttons */}
-        <div className={styles.aiFeatures}>
-          {aiFeatures.map((feature) => (
-            <button
-              key={feature}
-              className={styles.featureButton}
-              onClick={() => handleFeatureClick(feature)}
-            >
-              {feature}
-            </button>
-          ))}
-        </div>
-      </header>
-
-      <footer className={styles.footer}>
-        © {new Date().getFullYear()} BharatSearch. All rights reserved.
-      </footer>
+        ☰
+      </button>
     </div>
-  );
+
+    {/* Side Drawer */}
+    <div
+      ref={drawerRef}
+      className={`${styles.sideDrawer} ${menuOpen ? styles.sideDrawerOpen : ""}`}
+    >
+      <ul>
+        <li>Chats</li>
+        <li>AI Agents</li>
+        <li>Settings</li>
+        <li>About</li>
+      </ul>
+    </div>
+
+    <SearchHeader
+      styles={styles}
+      aiFeatures={aiFeatures}
+      handleFeatureClick={handleFeatureClick}
+    />
+
+    <SearchFooter styles={styles} />
+
+  </div>
+);
 }

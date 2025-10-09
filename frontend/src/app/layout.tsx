@@ -1,19 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
-
-// Fonts
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"], // optional: define weights for consistent typography
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  weight: ["400"], // for code/monospace usage
-});
 
 // Metadata for BharatSearch
 export const metadata: Metadata = {
@@ -50,9 +37,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-gray-50 text-gray-900`}>
+      <body>
         {/* Global Providers like ThemeProvider, AuthProvider, or Redux can go here */}
-        <main className="min-h-screen flex flex-col">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );

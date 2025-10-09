@@ -5,6 +5,9 @@
   font-family: var(--font-geist-sans), sans-serif;
   background-color: #fafafa;
   color: #111;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 10px 0px 10px 0px;
 }
 
 /* ---------------- NAVBAR / HAMBURGER ---------------- */
@@ -49,44 +52,7 @@
   max-width: 700px;
 }
 
-/* ---------------- SEARCH ---------------- */
-.searchContainer {
-  display: flex;
-  max-width: 700px;
-  width: 100%;
-}
 
-.searchInput {
-  flex: 1;
-  padding: 1.2rem 1.5rem;
-  font-size: 1.2rem;
-  border: 1px solid #ccc;
-  border-radius: 50px 0 0 50px;
-  outline: none;
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.searchInput:focus {
-  border-color: #111;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.searchButton {
-  padding: 1.2rem 2rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border: none;
-  background-color: #111;
-  color: #fff;
-  border-radius: 0 50px 50px 0;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
-}
-
-.searchButton:hover {
-  background-color: #333;
-  transform: translateY(-2px);
-}
 
 /* ---------------- AI FEATURES BUTTONS ---------------- */
 .aiFeatures {
@@ -124,11 +90,13 @@
   border-top: 1px solid #eee;
   margin-top: auto;
 }
+
 /* ---------------- SIDE DRAWER ---------------- */
 .sideDrawer {
   position: fixed;
   top: 0;
-  right: -250px; /* hidden by default */
+  right: -250px;
+  /* hidden by default */
   width: 250px;
   height: 100%;
   background-color: #111;
@@ -141,7 +109,8 @@
 }
 
 .sideDrawerOpen {
-  right: 0; /* slides in */
+  right: 0;
+  /* slides in */
 }
 
 .sideDrawer ul {
