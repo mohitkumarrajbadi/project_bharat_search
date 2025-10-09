@@ -1,0 +1,55 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "BharatSearch Gateway Service - API gateway & routing layer",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "proxy": "http://localhost:5000",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:prod": "NODE_ENV=production node dist/index.js",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "clean": "rm -rf dist",
+    "prepare": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "gateway",
+    "typescript",
+    "api",
+    "microservices",
+    "bharatsearch"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.7.0",
+    "@types/supertest": "^6.0.3",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.29.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.2.5",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.4",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
