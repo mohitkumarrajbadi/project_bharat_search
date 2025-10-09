@@ -19,11 +19,26 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
 }) => {
   const { query, setQuery, handleSearch } = useSearch(onSearch);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearchWithAnimation = (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsSearching(true);
+    handleSearch(event);
+
+    // Stop animation after 1.5s (or when search completes)
+    setTimeout(() => setIsSearching(false), 1500);
+  };
 
   return (
     <div className={searchstyles.searchFeature}>
       {/* Search Input */}
-      <form className={searchstyles.searchContainer} onSubmit={handleSearch}>
+      <form
+        className={`${searchstyles.searchContainer} ${
+          isSearching ? searchstyles.searching : ""
+        }`}
+        onSubmit={handleSearchWithAnimation}
+      >
         <input
           type="text"
           placeholder="Search BharatSearch..."

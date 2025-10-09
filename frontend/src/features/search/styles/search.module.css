@@ -84,3 +84,21 @@
   border-top: 1px solid #eee;
   margin-top: auto;
 }
+
+/* Container for relative positioning */
+.searching {
+  position: relative;
+}
+
+.searching .searchInput {
+  position: relative;
+  z-index: 1;
+  padding: 1.2rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px 0 0 50px;
+  border: 2px solid transparent;
+  /* background-color: #fff; */
+  outline: none;
+}
+
+

@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+redis
+httpx
+langchain
+langgraph
+duckduckgo_search
+ddgs

@@ -2,51 +2,47 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
 
 const app = express();
-
-// ✅ Middlewares
-app.use(helmet());
-
-// Allow requests only from your frontend origin
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-    credentials: true,
-  })
-);
+const ORCHESTRATOR_URL = process.env.ORCHESTRATOR_URL || "http://localhost:8000";
 
+app.use(helmet());
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
 
-// 🌐 API Routes prefix
 const API_PREFIX = "/api";
 
-// 🧭 Health check
-app.get(`${API_PREFIX}/health`, (req: Request, res: Response) => {
-  res.status(200).json({ status: "OK", message: "Gateway is up and running 🚀" });
+// Health check
+app.get(`${API_PREFIX}/health`, (_req, res) => {
+  res.status(200).json({ status: "OK", message: "Gateway is running 🚀" });
 });
 
-// 🧭 Search route
-app.get(`${API_PREFIX}/search`, (req: Request, res: Response) => {
-  res.status(200).json({ status: "OK", message: "Search endpoint active ✅" });
+// Forward /search to orchestrator
+app.get(`${API_PREFIX}/search`, async (req: Request, res: Response) => {
+  try {
+    const { query } = req.query;
+    if (!query) return res.status(400).json({ error: "query param missing" });
+
+    // Call orchestrator
+    const orchestratorRes = await fetch(`${ORCHESTRATOR_URL}/search?q=${encodeURIComponent(query as string)}`);
+    const data = await orchestratorRes.json();
+
+    res.json(data);
+  } catch (err) {
+    console.error("❌ Error forwarding to orchestrator:", err);
+    res.status(500).json({ error: "Gateway to orchestrator failed" });
+  }
 });
 
-// 🧪 Test route
-app.get(`${API_PREFIX}/test`, (req: Request, res: Response) => {
-  res.status(200).json({ message: "Test route working ✅" });
-});
-
-// ❌ Global Error Handling
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+// Global error handler
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error("❌ Error:", err.message);
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// 🌍 Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Gateway server running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Gateway running on http://localhost:${PORT}`));
