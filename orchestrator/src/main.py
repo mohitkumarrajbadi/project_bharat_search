@@ -6,6 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.concurrency import run_in_threadpool
 from ddgs import DDGS
 
+# agents import
+from agents.weather_agent import WeatherAgent
+
+from agents.web_search_agent import WebSearchAgent
+
 # Ensure HTTP clients use certifi bundle
 os.environ.setdefault("SSL_CERT_FILE", certifi.where())
 os.environ.setdefault("REQUESTS_CA_BUNDLE", certifi.where())
@@ -15,6 +20,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("orchestrator")
 
 app = FastAPI(title="BharatSearch Orchestrator")
+
+
 
 # CORS Middleware — only allow gateway/known origins
 app.add_middleware(
@@ -28,39 +35,26 @@ app.add_middleware(
 @app.get("/search")
 async def search(q: str = Query(..., description="Search query")):
     """Perform a search via DuckDuckGo, with fallback to lite API."""
-    if not q.strip():
-        raise HTTPException(status_code=400, detail="Query parameter 'q' cannot be empty")
-
     try:
-        def ddg_call():
-            with DDGS() as ddgs:
-                return list(ddgs.text(q, max_results=10, backend="api"))
+        web_search_agent = WebSearchAgent()
+        return await web_search_agent.search(q)
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        logger.error("Search failed: %s", e)
+        raise HTTPException(status_code=500, detail="Internal server error") from e
 
-        results = await run_in_threadpool(ddg_call)
-        return {"query": q, "results": results}
+@app.get("/weather")
+async def get_weather(lat: float = Query(...), lon: float = Query(...)):
+    """Call the weather agent to get weather info."""
+    try:
+        weather_agent = WeatherAgent(api_key=os.getenv("OPENWEATHER_API_KEY", "your_api_key_here"))
+    except Exception as e:
+        logger.error("Weather fetch failed: %s", e)
+        raise HTTPException(status_code=500, detail="Internal server error") from e
+    return await weather_agent.get_weather(lat, lon)
 
-    except Exception as primary_err:
-        logger.warning("Primary DDGS API failed: %s", primary_err)
-        try:
-            def ddg_fallback():
-                with DDGS() as ddgs:
-                    return list(ddgs.text(q, max_results=10, backend="lite"))
-
-            results = await run_in_threadpool(ddg_fallback)
-            return {
-                "query": q,
-                "results": results,
-                "note": "Primary API backend failed; used lite fallback",
-                "primary_error": str(primary_err),
-            }
-
-        except Exception as fallback_err:
-            logger.error("Both DDGS API and lite backends failed: %s", fallback_err)
-            raise HTTPException(
-                status_code=500,
-                detail={
-                    "error": "Both DDGS API and lite backends failed",
-                    "primary_error": str(primary_err),
-                    "fallback_error": str(fallback_err),
-                },
-            )
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "ok"}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import searchstyles from "../styles/search.module.css";
 import { useSearch } from "../hooks/useSearch";
+import AIFeatureBar from "./AIFeaturebar";
 
 interface SearchBarProps {
   styles: {
@@ -32,11 +33,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div className={searchstyles.searchFeature}>
+      
       {/* Search Input */}
       <form
-        className={`${searchstyles.searchContainer} ${
-          isSearching ? searchstyles.searching : ""
-        }`}
+        className={`${searchstyles.searchContainer} ${isSearching ? searchstyles.searching : ""
+          }`}
         onSubmit={handleSearchWithAnimation}
       >
         <input
@@ -52,18 +53,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
       </form>
 
       {/* AI Feature Buttons */}
-      <div className={styles.aiFeatures}>
-        {aiFeatures.map((feature) => (
-          <button
-            key={feature}
-            type="button"
-            className={styles.featureButton}
-            onClick={() => handleFeatureClick(feature)}
-          >
-            {feature}
-          </button>
-        ))}
-      </div>
+      <AIFeatureBar aiFeatures={aiFeatures} handleFeatureClick={function (feature: string): void {
+        throw new Error("Function not implemented.");
+      }} ></AIFeatureBar>
+
+
     </div>
   );
 };
