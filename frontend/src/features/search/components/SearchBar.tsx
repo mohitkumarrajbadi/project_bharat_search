@@ -1,63 +1,74 @@
 import React, { useState } from "react";
-import searchstyles from "../styles/search.module.css";
+import searchStyles from "../styles/search.module.css";
 import { useSearch } from "../hooks/useSearch";
 import AIFeatureBar from "./AIFeaturebar";
+import SearchResult from "./SearchResult";
+import { SearchResponse } from "../types";
 
 interface SearchBarProps {
-  styles: {
-    aiFeatures: string;
-    featureButton: string;
-  };
   aiFeatures: string[];
   handleFeatureClick: (feature: string) => void;
   onSearch?: (query: string) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  styles,
   aiFeatures,
   handleFeatureClick,
   onSearch,
 }) => {
-  const { query, setQuery, handleSearch } = useSearch(onSearch);
+  const { query, setQuery, search } = useSearch({ onSearch });
   const [isSearching, setIsSearching] = useState(false);
+  const [searchResponse, setSearchResponse] =
+    useState<SearchResponse | null>(null);
 
-  const handleSearchWithAnimation = (event: React.FormEvent) => {
+  const handleSearchWithAnimation = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
     setIsSearching(true);
-    handleSearch(event);
 
-    // Stop animation after 1.5s (or when search completes)
-    setTimeout(() => setIsSearching(false), 1500);
+    try {
+      const result = await search(query);
+      setSearchResponse(result);
+      console.log("Search Result:", result);
+    } catch (error) {
+      console.error("Search error:", error);
+    } finally {
+      setTimeout(() => setIsSearching(false), 1500);
+    }
   };
 
   return (
-    <div className={searchstyles.searchFeature}>
-      
-      {/* Search Input */}
+    <div className={searchStyles.searchFeature}>
+      {/* 🔍 Search Form */}
       <form
-        className={`${searchstyles.searchContainer} ${isSearching ? searchstyles.searching : ""
-          }`}
+        className={`${searchStyles.searchContainer} ${
+          isSearching ? searchStyles.searching : ""
+        }`}
         onSubmit={handleSearchWithAnimation}
       >
         <input
           type="text"
           placeholder="Search BharatSearch..."
-          className={searchstyles.searchInput}
+          className={searchStyles.searchInput}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button type="submit" className={searchstyles.searchButton}>
-          Search
+        <button
+          type="submit"
+          className={searchStyles.searchButton}
+          disabled={isSearching}
+        >
+          {isSearching ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {/* AI Feature Buttons */}
-      <AIFeatureBar aiFeatures={aiFeatures} handleFeatureClick={function (feature: string): void {
-        throw new Error("Function not implemented.");
-      }} ></AIFeatureBar>
+      <AIFeatureBar
+        aiFeatures={aiFeatures}
+        handleFeatureClick={handleFeatureClick}
+      />
 
-
+      <SearchResult searchResponse={searchResponse} />
     </div>
   );
 };

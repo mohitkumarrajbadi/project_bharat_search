@@ -37,7 +37,7 @@ app.get(`${API_PREFIX}/search`, async (req: Request, res: Response) => {
 
     const orchestratorRes = await fetch(`${ORCHESTRATOR_URL}/search?q=${encodeURIComponent(query as string)}`);
     const data = await orchestratorRes.json();
-
+    console.log("Response from orchestrator:", data);
     res.json(data);
   } catch (err) {
     console.error("❌ Error forwarding to orchestrator:", err);

@@ -1,94 +1,43 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import styles from "./page.module.css";
-import SearchHeader from "@/features/search/components/SearchHeader";
+import "./theme.css";
+
+import { useState, useCallback } from "react";
+import { AI_FEATURES } from "@/constants/aiFeatures";
+import { useFeatureData } from "@/hooks/useFeatureData";
+
+
+import SearchBarBody from "@/features/search/components/SearchBarBody";
 import SearchFooter from "@/features/search/components/SearchFooter";
-import './theme.css'
+import { FeatureInsights } from "@/components/search/FeatureInsights";
+import { Navbar } from "@/components/layouts/Navbax";
+import { SideDrawer } from "@/components/layouts/SideDrawer";
 
 export default function Home() {
-  const aiFeatures = [
-    { name: "Weather Updates", key: "weather" },
-    { name: "Finance Insights", key: "finance" },
-    { name: "Sports Updates", key: "sports" },
-    { name: "Farmers Info", key: "farmers" },
-    { name: "Health Tips", key: "health" },
-    { name: "Education", key: "education" },
-  ];
-
   const [menuOpen, setMenuOpen] = useState(false);
-  const drawerRef = useRef<HTMLDivElement>(null);
+  const { data, loading, fetchFeature } = useFeatureData();
 
-  // Feature selection & data
-  const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
-  const [featureData, setFeatureData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
-  // Close drawer on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
-    else document.removeEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]);
-
-  // Handle Feature Click — Fetch API data
-  const handleFeatureClick = async (featureName: string) => {
-    const feature = aiFeatures.find(f => f.name === featureName);
-    if (!feature) return;
-
-    setSelectedFeature(featureName);
-    setLoading(true);
-    setFeatureData(null);
-
-    try {
-      const response = await fetch(`/api/${feature.key}`);
-      if (!response.ok) throw new Error("API failed");
-      const data = await response.json();
-      setFeatureData(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setFeatureData({ error: "Failed to fetch data" });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleFeatureClick = useCallback(
+    (name: string) => {
+      const feature = AI_FEATURES.find(f => f.name === name);
+      if (feature) fetchFeature(feature.name, feature.key);
+    },
+    [fetchFeature]
+  );
 
   return (
     <div className={styles.page}>
-      {/* ===== Navbar ===== */}
-      <div className={styles.navbar}>
-        <button className={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
-          ☰
-        </button>
-      </div>
+      <Navbar styles={styles} onMenuClick={() => setMenuOpen(true)} />
+      <SideDrawer styles={styles} open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-      {/* ===== Side Drawer ===== */}
-      <div
-        ref={drawerRef}
-        className={`${styles.sideDrawer} ${menuOpen ? styles.sideDrawerOpen : ""}`}
-      >
-        <ul>
-          <li>Chats</li>
-          <li>AI Agents</li>
-          <li>Settings</li>
-          <li>About</li>
-        </ul>
-      </div>
-
-      {/* ===== Header ===== */}
-      <SearchHeader
+      <SearchBarBody
         styles={styles}
-        aiFeatures={aiFeatures.map(f => f.name)}
+        aiFeatures={AI_FEATURES.map(f => f.name)}
         handleFeatureClick={handleFeatureClick}
       />
 
-      {/* ===== Insights Section ===== */}
-      {/* Place holder for the Insights after clicking on the AI Features updates */}
+      <FeatureInsights loading={loading} data={data} />
 
       <SearchFooter styles={styles} />
     </div>
