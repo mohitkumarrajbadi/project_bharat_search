@@ -35,22 +35,6 @@ User → Gateway → Orchestrator → Agents → LLM + Vector DB → Response
 7. **Database & Streaming**: Postgres, Kafka, and ClickHouse for persistence & analytics.
 8. **Observability**: Prometheus, Grafana, OpenTelemetry for metrics & monitoring.
 
----
-
-## ⚡ Tech Stack
-
-| Layer          | Technology                                |
-| -------------- | ----------------------------------------- |
-| Frontend       | Next.js, React, CSS                       |
-| Gateway        | Go (Fiber/gRPC)                           |
-| Orchestrator   | Python (FastAPI, asyncio)                 |
-| Agents         | Python / Node / Go microservices          |
-| LLM Engine     | LangChain, OpenAI, HuggingFace            |
-| Data           | Postgres, Redis, Kafka, Milvus/FAISS      |
-| Infrastructure | Kubernetes, Helm, Terraform, GitLab CI/CD |
-| Monitoring     | Prometheus, Grafana, Loki, OpenTelemetry  |
-
----
 
 ## 📈 Scalability & Performance
 
@@ -66,29 +50,51 @@ User → Gateway → Orchestrator → Agents → LLM + Vector DB → Response
 > ⚠️ This is an advanced distributed system. For development, start with the core MVP agents.
 
 ```bash
-# Clone the repo
-git clone https://github.com/mohitkumarrajbadi/BharatSearch.git
+# -------------------------------
+# 1. Clone the repository
+# -------------------------------
+git clone https://github.com/mohitkumarrajbadi/project_bharat_search.git
 cd BharatSearch
 
-# Set up Python environment
+
+# -------------------------------
+# 2. Setup Frontend (Next.js)
+# -------------------------------
+cd frontend
+npm install
+npm run dev
+# Runs on http://localhost:3000
+
+cd ..
+
+
+# -------------------------------
+# 3. Setup Gateway (Go)
+# -------------------------------
+cd gateway
+go mod tidy
+go run main.go
+# Runs on http://localhost:8080
+
+cd ..
+
+
+# -------------------------------
+# 4. Setup Orchestrator (Python)
+# -------------------------------
+cd orchestrator
+
+# Create virtual environment (recommended)
 python3 -m venv venv
 source venv/bin/activate
+
 pip install -r requirements.txt
 
-# Start Orchestrator
-cd orchestrator
-uvicorn main:app --reload
+uvicorn src.main:app --reload --port 8000
+# Runs on http://localhost:8000
 
-# Start sample agent (e.g., Weather)
-cd ../agents/weather-agent
-python main.py
-
-# Access via Gateway (FastAPI)
-cd ../gateway
-uvicorn main:app --reload
 ```
 
-> For full-scale deployment, refer to **Kubernetes manifests** and **Terraform infra scripts** in `/deploy`.
 
 ---
 
@@ -119,12 +125,7 @@ MIT License © 2025 Mohit Kumar Raj Badi
 
 ## 🔗 Links
 
-* [Live Demo / Docs](#) *(coming soon)*
-* [Project Website](https://bharatsearch.example.com) *(coming soon)*
 * [LinkedIn](https://www.linkedin.com/in/mohitkumarrajbadi/)
 
----
 
-If you want, I can also create a **professional System Design Diagram** for this README showing **data flow from Gateway → Orchestrator → Agents → LLM → Cache → DB**, making it **pitch-deck-ready and visually appealing**.
 
-Do you want me to do that next?
