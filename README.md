@@ -35,22 +35,6 @@ User → Gateway → Orchestrator → Agents → LLM + Vector DB → Response
 7. **Database & Streaming**: Postgres, Kafka, and ClickHouse for persistence & analytics.
 8. **Observability**: Prometheus, Grafana, OpenTelemetry for metrics & monitoring.
 
----
-
-## ⚡ Tech Stack
-
-| Layer          | Technology                                |
-| -------------- | ----------------------------------------- |
-| Frontend       | Next.js, React, CSS                       |
-| Gateway        | Go (Fiber/gRPC)                           |
-| Orchestrator   | Python (FastAPI, asyncio)                 |
-| Agents         | Python / Node / Go microservices          |
-| LLM Engine     | LangChain, OpenAI, HuggingFace            |
-| Data           | Postgres, Redis, Kafka, Milvus/FAISS      |
-| Infrastructure | Kubernetes, Helm, Terraform, GitLab CI/CD |
-| Monitoring     | Prometheus, Grafana, Loki, OpenTelemetry  |
-
----
 
 ## 📈 Scalability & Performance
 
@@ -142,5 +126,6 @@ MIT License © 2025 Mohit Kumar Raj Badi
 ## 🔗 Links
 
 * [LinkedIn](https://www.linkedin.com/in/mohitkumarrajbadi/)
+
 
 
